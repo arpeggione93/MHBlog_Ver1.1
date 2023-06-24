@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.cmh.MHBlog.domain.member.MemberMapper">
+
+    <!-- MH0_Blog_Person 테이블 전체 컬럼 -->
+    <sql id="memberColumns">
+          ID
+        , LOGIN_ID
+        , PASSWORD
+        , name
+        , GENDER
+        , BIRTHDAY
+        , DELETE_YN
+        , REGIST_DTTM
+        , MODIFIED_DTTM
+    </sql>
+
+
+    <!-- 회원 정보 저장 (회원가입) -->
+    <insert id="save" parameterType="org.cmh.MHBlog.domain.member.MemberRequest" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MH0_Blog_Person (
+            <include refid="memberColumns" />
+        ) VALUES (
+              #{id}
+            , #{loginId}
+            , #{password}
+            , #{name}
+            , #{gender}
+            , #{birthday}
+            , 0
+            , NOW()
+            , NULL
+        )
+    </insert>
+
+
+    <!-- 회원 상세정보 조회 -->
+    <select id="findByLoginId" parameterType="string" resultType="org.cmh.MHBlog.domain.member.MemberResponse">
+        SELECT
+            <include refid="memberColumns" />
+        FROM
+        MH0_Blog_Person
+        WHERE
+            DELETE_YN = 0
+            AND LOGIN_ID = #{value}
+    </select>
+
+
+    <!-- 회원 정보 수정 -->
+    <update id="update" parameterType="org.cmh.MHBlog.domain.member.MemberRequest">
+        UPDATE MH0_Blog_Person
+        SET
+              MODIFIED_DTTM = NOW()
+            , NAME = #{name}
+            , GENDER = #{gender}
+            , BIRTHDAY = #{birthday}
+            <if test="password != null and password != ''">
+            , PASSWORD = #{password}
+            </if>
+        WHERE
+            ID = #{id}
+    </update>
+
+
+    <!-- 회원 정보 삭제 (회원 탈퇴) -->
+    <delete id="deleteById" parameterType="long">
+        UPDATE MH0_Blog_Person
+        SET
+            DELETE_YN = 1
+        WHERE
+            ID = #{id}
+    </delete>
+
+
+    <!-- 회원 수 카운팅 (ID 중복 체크) -->
+    <select id="countByLoginId" parameterType="string" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            MH0_Blog_Person
+        WHERE
+            LOGIN_ID = #{value}
+    </select>
+
+</mapper>

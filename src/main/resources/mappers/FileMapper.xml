@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.cmh.MHBlog.domain.file.FileMapper">
+
+    <!-- MH0_Blog_File 테이블 전체 컬럼 -->
+    <sql id="fileColumns">
+          ID
+        , POST_ID
+        , ORIGINAL_NAME
+        , SAVE_NAME
+        , size
+        , DELETE_YN
+        , REGIST_DTTM
+        , DELETED_DTTM
+    </sql>
+
+
+    <!-- 파일 정보 저장 -->
+    <insert id="saveAll" parameterType="list">
+        INSERT INTO MH0_Blog_File (
+            <include refid="fileColumns" />
+        ) VALUES
+        <foreach item="file" collection="list" separator=",">
+        (
+              #{file.id}
+            , #{file.postId}
+            , #{file.originalName}
+            , #{file.saveName}
+            , #{file.size}
+            , 0
+            , NOW()
+            , NULL
+        )
+        </foreach>
+    </insert>
+
+
+    <!-- 파일 리스트 조회 -->
+    <select id="findAllByPostId" parameterType="long" resultType="org.cmh.MHBlog.domain.file.FileResponse">
+        SELECT
+            <include refid="fileColumns" />
+        FROM
+        MH0_Blog_File
+        WHERE
+            DELETE_YN = 0
+            AND POST_ID = #{value}
+        ORDER BY
+            ID
+    </select>
+
+
+    <!-- 파일 리스트 조회 -->
+    <select id="findAllByIds" parameterType="list" resultType="org.cmh.MHBlog.domain.file.FileResponse">
+        SELECT
+            <include refid="fileColumns" />
+        FROM
+        MH0_Blog_File
+        WHERE
+            DELETE_YN = 0
+            AND ID IN
+            <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{ID}
+            </foreach>
+        ORDER BY
+            ID
+    </select>
+
+
+    <!-- 파일 삭제 -->
+    <delete id="deleteAllByIds" parameterType="list">
+        UPDATE MH0_Blog_File
+        SET
+              DELETE_YN = 1
+            , DELETED_DTTM = NOW()
+        WHERE
+            ID IN
+            <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+            </foreach>
+    </delete>
+
+
+    <!-- 파일 상세정보 조회 -->
+    <select id="findById" parameterType="long" resultType="org.cmh.MHBlog.domain.file.FileResponse">
+        SELECT
+            <include refid="fileColumns" />
+        FROM
+        MH0_Blog_File
+        WHERE
+            DELETE_YN = 0
+            AND ID = #{value}
+    </select>
+
+</mapper>
