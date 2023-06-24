@@ -32,7 +32,7 @@
                                 <td><span class="chkbox"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"> 설정</label></span></td>
 
                                 <th scope="row">등록일</th>
-                                <td colspan="3"><input type="text" id="createdDate" name="createdDate" readonly /></td>
+                                <td colspan="3"><input type="text" id="registDttm" name="registDttm" readonly /></td>
                             </tr>
 
                             <tr>
@@ -152,7 +152,7 @@
                 const form = document.getElementById('saveForm');
                 const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
                 form.isNotice.checked = post.noticeYn;
-                form.createdDate.value = dayjs(post.createdDate).format('YYYY-MM-DD HH:mm');
+                form.registDttm.value = dayjs(post.registDttm).format('YYYY-MM-DD HH:mm');
 
                 fields.forEach(field => {
                     form[field].value = post[field];
@@ -162,7 +162,7 @@
 
             // 등록일 초기화
             function initCreatedDate() {
-                document.getElementById('createdDate').value = dayjs().format('YYYY-MM-DD');
+                document.getElementById('registDttm').value = dayjs().format('YYYY-MM-DD');
             }
 
 

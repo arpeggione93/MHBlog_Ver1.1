@@ -27,6 +27,7 @@ public class CommentApiController {
     // 댓글 리스트 조회
     @GetMapping("/posts/{postId}/comments")
     public PagingResponse<CommentResponse> findAllComment(@PathVariable final Long postId, final CommentSearchDto params) {
+       System.out.println("댓글 전체 조회 ");
         return commentService.findAllComment(params);
     }
 

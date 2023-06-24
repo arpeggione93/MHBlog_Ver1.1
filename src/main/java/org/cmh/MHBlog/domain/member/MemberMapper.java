@@ -2,6 +2,8 @@ package org.cmh.MHBlog.domain.member;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
+
 @Mapper
 public interface MemberMapper {
 
@@ -36,5 +38,12 @@ public interface MemberMapper {
      * @return 회원 수
      */
     int countByLoginId(String loginId);
+
+
+    /**
+     * API 회원 정보 저장 (회원가입)
+     * @param  - 회원 정보
+     */
+    void saveAPI(HashMap<String, Object> userInfo);
 
 }

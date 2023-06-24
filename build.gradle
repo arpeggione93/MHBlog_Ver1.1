@@ -25,6 +25,18 @@ repositories {
 }
 
 dependencies {
+	/*서버 재시작없이 프론트 반영*/
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	/*카카오 REST API*/
+	/*JACKSON*/
+	implementation "com.fasterxml.jackson.core:jackson-core:2.13.2.2"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2.2"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.13.2.2"
+	implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2.2"
+
+	implementation "com.goglecode.json-simple:1.1"
+	implementation 'com.google.code.gson:gson:2.8.7'
+
 
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.61'

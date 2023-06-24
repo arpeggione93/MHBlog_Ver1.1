@@ -7,6 +7,7 @@
     <sql id="memberColumns">
           ID
         , LOGIN_ID
+        , API_LOGIN_YN
         , PASSWORD
         , name
         , GENDER
@@ -24,6 +25,7 @@
         ) VALUES (
               #{id}
             , #{loginId}
+            , 0
             , #{password}
             , #{name}
             , #{gender}
@@ -82,5 +84,33 @@
         WHERE
             LOGIN_ID = #{value}
     </select>
+
+
+    <!-- 회원 정보 저장 API (회원가입) -->
+    <insert id="saveAPI" parameterType="Hashmap" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MH0_Blog_Person (
+      LOGIN_ID
+    , API_LOGIN_YN
+    , PASSWORD
+    , name
+    , GENDER
+    , BIRTHDAY
+    , DELETE_YN
+    , REGIST_DTTM
+    , MODIFIED_DTTM  ) VALUES (
+          #{loginId}
+        , 1
+        , #{password}
+        , '카카오회원'
+        , NULL
+        , NULL
+        , 0
+        , NOW()
+        , NOW()
+        )
+    </insert>
+
+
+
 
 </mapper>

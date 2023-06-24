@@ -221,11 +221,12 @@
                 isValid(content, '댓글');
 
                 const postId = [[ ${post.id} ]];
+                const postNM = [[ ${post.writer} ]];
                 const uri = `/posts/${postId}/comments`;
                 const params = {
                     postId : postId,
                     content : content.value,
-                    writer : '홍길동'
+                    writer : postNM //'홍길동'
                 }
 
                 callApi(uri, 'post', params);
