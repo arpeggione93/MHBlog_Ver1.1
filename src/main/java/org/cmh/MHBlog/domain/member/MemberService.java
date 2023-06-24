@@ -135,7 +135,7 @@ public class MemberService {
             stringBuilder.append("grant_type=authorization_code");
 
             stringBuilder.append("&client_id=0604411e0cac0a315dfbadf5aeae568a"); //본인이 발급받은 key
-            stringBuilder.append("&redirect_uri=http://localhost:8082/kakaoLogin"); // 본인이 설정한 주소
+            stringBuilder.append("&redirect_uri=http://localhost:8082/login"); // 본인이 설정한 주소
 
             stringBuilder.append("&code=" + authorize_code);
             bufferedWriter.write(stringBuilder.toString());

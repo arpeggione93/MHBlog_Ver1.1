@@ -87,4 +87,70 @@ public class MemberController {
         return memberService.countMemberByLoginId(loginId);
     }
 
+
+
+    //카카오 로그인
+    @RequestMapping(value="/kakaoLogin", method=RequestMethod.GET )
+    @ResponseBody
+    public String kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpServletRequest request) throws Exception {
+
+        final MemberRequest params = new MemberRequest();
+
+        //1. 액세스 토큰 받아오기
+        String access_Token = memberService.getAccessToken(code);
+        System.out.println("#########" + code);
+
+
+        // 2. 엑세스 토큰을 통해 회원정보 받아오기
+        HashMap<String, Object> userInfo = memberService.getUserInfo(access_Token);
+        System.out.println("###access_Token#### : " + access_Token);
+        System.out.println("###nickname#### : " + userInfo.get("nickname"));
+        System.out.println("###email#### : " + userInfo.get("email"));
+
+
+
+        //계정정보
+        String loginId = (String)userInfo.get("email"); //아이디는 이메일로 대체
+        String password = access_Token; //패스워드 대신 엑세스토큰을 통해 로그인
+
+        userInfo.put("loginId", loginId);
+        userInfo.put("password", password);
+
+
+        //가입여부 0 : 미가입 | 1: 기존회원
+        int Regist_YN = memberService.countMemberByLoginId(loginId);
+
+
+
+        System.out.println(">>>>>>>>>>>>" + Regist_YN);
+
+
+
+
+        //신규회원
+        if(Regist_YN == 0){
+
+            memberService.saveMemberAPI(userInfo);
+            System.out.println("API회원가입완료");
+
+
+        }
+
+        //로그인
+        MemberResponse member = memberService.login(loginId, password);
+        // 2. 세션에 회원 정보 저장 & 세션 유지 시간 설정
+        if (member != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("loginMember", member);
+            session.setMaxInactiveInterval(60 * 30);
+        }
+        System.out.println("로그인완료");
+
+        return "redirect:/login.do";
+
+
+
+    }
+
+
 }
