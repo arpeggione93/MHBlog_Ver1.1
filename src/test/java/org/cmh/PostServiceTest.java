@@ -1,4 +1,4 @@
-package com.study;
+package org.cmh;
 
 import org.cmh.MHBlog.domain.post.PostRequest;
 import org.cmh.MHBlog.domain.post.PostService;

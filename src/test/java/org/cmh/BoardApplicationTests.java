@@ -1,4 +1,4 @@
-package com.study;
+package org.cmh;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Test;

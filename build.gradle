@@ -25,6 +25,10 @@ repositories {
 }
 
 dependencies {
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.61'
+
 	implementation 'mysql:mysql-connector-java'
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.0'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
