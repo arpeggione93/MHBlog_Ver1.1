@@ -20,9 +20,8 @@
                         <tr>
                             <th scope="row">글 유형</th>
                             <td th:text="${post.noticeYn == false ? '일반' : '공지'}"></td>
-
                             <th scope="row">등록일</th>
-                            <td th:text="${#temporals.format( post.registDttm, 'yyyy-MM-dd HH:mm' )}"></td>
+                            <td th:text="${#dates.format(post.registDttm, 'YYYY-MM-DD HH:MM')}"></td>
                         </tr>
                         <tr>
                             <th scope="row">제목</th>
@@ -76,6 +75,11 @@
             </section>
         </div> <!--/* .content */-->
 
+
+
+        <!-- 여기까지 -->
+
+
         <!--/* 댓글 수정 popup */-->
         <div id="commentUpdatePopup" class="popLayer">
             <h3>댓글 수정</h3>
@@ -85,14 +89,14 @@
                         <col style="width:30%;" /><col style="width:70%;" />
                     </colgroup>
                     <tbody>
-                        <tr>
-                            <th scope="row">작성자<span class="es">필수 입력</span></th>
-                            <td><input type="text" id="modalWriter" name="modalWriter" placeholder="작성자를 입력해 주세요." /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">내용<span class="es">필수 입력</span></th>
-                            <td><textarea id="modalContent" name="modalContent" cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea></td>
-                        </tr>
+                    <tr>
+                        <th scope="row">작성자<span class="es">필수 입력</span></th>
+                        <td><input type="text" id="modalWriter" name="modalWriter" placeholder="작성자를 입력해 주세요." /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">내용<span class="es">필수 입력</span></th>
+                        <td><textarea id="modalContent" name="modalContent" cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea></td>
+                    </tr>
                     </tbody>
                 </table>
                 <p class="btn_set">
@@ -106,7 +110,7 @@
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-        /*<![CDATA[*/
+            /*<![CDATA[*/
 
             window.onload = () => {
                 findAllFile();
@@ -139,7 +143,7 @@
             }
 
 
-           // 전체 댓글 조회
+            // 전체 댓글 조회
             function findAllComment(page) {
 
                 const uriPage = new URLSearchParams(location.search).get('page');
@@ -377,7 +381,8 @@
                 history.replaceState({}, '', location.pathname + `?id=${postId}&page=${currentPage.text}`);
             }
 
-        /*]]>*/
+            /*]]>*/
         </script>
+
     </th:block>
 </html>

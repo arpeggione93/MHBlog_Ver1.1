@@ -3,6 +3,7 @@ package org.cmh.MHBlog.domain.post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 public class PostResponse {
@@ -14,7 +15,7 @@ public class PostResponse {
     private int viewCnt;                   // 조회 수
     private Boolean noticeYn;              // 공지글 여부
     private Boolean deleteYn;              // 삭제 여부
-    private LocalDateTime registDttm;     // 생성일시
-    private LocalDateTime modifiedDttm;    // 최종 수정일시
+    private Date registDttm;     // 생성일시
+    private Date modifiedDttm;    // 최종 수정일시
 
 }

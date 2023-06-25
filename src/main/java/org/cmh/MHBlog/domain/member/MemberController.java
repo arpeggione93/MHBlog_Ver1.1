@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
@@ -16,8 +17,27 @@ public class MemberController {
 
     // 로그인 페이지
     @GetMapping("/login.do")
-    public String openLogin() {
-        return "member/login";
+    public String openLogin(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        System.out.println("세션값 >>>>>" + session);
+
+        //이미 로그인 상태라면 게시판 목록 화면으로 보내지도록 설정
+        if(session != null){
+
+            //return "post/list";
+            return "member/login";
+
+        }else{
+        //로그인 세션이 Null일때 로그인 화면 송출
+            return "member/login";
+
+        }
+
+
+
+
+
     }
 
     // 로그인
@@ -89,9 +109,8 @@ public class MemberController {
 
 
     //카카오 로그인
-    @RequestMapping(value="/kakaoLogin", method=RequestMethod.GET )
-    @ResponseBody
-    public String kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpServletRequest request) throws Exception {
+    @RequestMapping(value="/kakaoLogin", method = { RequestMethod.GET, RequestMethod.POST })
+    public String kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpServletRequest request , HttpServletResponse response) throws Exception {
 
         final MemberRequest params = new MemberRequest();
 
@@ -142,11 +161,19 @@ public class MemberController {
         }
         System.out.println("로그인완료");
 
+
+        //template
         return "redirect:/post/list.do";
+
+        //return "member/login";
+        //return "member/kakaoLoginCallback";
 
 
 
     }
+
+    //카카오 로그인
+
 
 
 }

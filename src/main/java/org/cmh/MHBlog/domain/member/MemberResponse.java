@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 public class MemberResponse {
@@ -16,8 +17,8 @@ public class MemberResponse {
     private Gender gender;                 // 성별
     private LocalDate birthday;            // 생년월일
     private Boolean deleteYn;              // 삭제 여부
-    private LocalDateTime registDttm;     // 생성일시
-    private LocalDateTime modifiedDttm;    // 최종 수정일시
+    private Date registDttm;     // 생성일시
+    private Date modifiedDttm;    // 최종 수정일시
 
     public void clearPassword() {
         this.password = "";
