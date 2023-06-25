@@ -112,5 +112,17 @@
 
 
 
+    <!-- API LOGIN 조회(가입여부) -->
+    <select id="ApiLoginId" parameterType="string" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            MH0_Blog_Person
+        WHERE
+            LOGIN_ID = #{value}
+            AND API_LOGIN_YN = 'Y'
+    </select>
+
+
 
 </mapper>

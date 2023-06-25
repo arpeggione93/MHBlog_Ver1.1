@@ -46,4 +46,13 @@ public interface MemberMapper {
      */
     void saveAPI(HashMap<String, Object> userInfo);
 
+
+    /**
+     * API 로그인 조회 (가입여부)
+     * @param loginId - UK
+     * @return 회원 수
+     */
+    int ApiLoginId(String loginId);
+
+
 }

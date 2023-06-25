@@ -33,19 +33,19 @@ public class MemberService {
         // 1. 회원 정보 및 비밀번호 조회
         MemberResponse member = findMemberByLoginId(loginId);
         String encodedPassword = (member == null) ? "" : member.getPassword();
-        String API_YN = Objects.requireNonNull(member).getAPIYn();
-        MemberResponse test = memberMapper.findByLoginId(loginId);
-        System.out.println(">>>>>>" + test.getLoginId() + test.getAPIYn()  + test.getDeleteYn()+ "<<<<<");
-        System.out.println("Password : " + encodedPassword);
-        System.out.println("API_YN>>>>>>" + API_YN + "loginID>>> " + loginId + "   member >>"
-        + member.getLoginId() + member.getDeleteYn() + member.getName() + member.getAPIYn()+"<<<<"  + findMemberByLoginId(loginId));
+
+
+        //API 로그인은 가입여부만 확인해줌
+        int ApiMember = APIByLoginId(loginId);
+
+        System.out.println(">>>>>>>API 가입여부 " + ApiMember);
 
         //memeber.getAPIYN 값이 null로 잡히는중
-        //if(API_YN == 0) {
+        if(ApiMember == 0) {
             // 2. 회원 정보 및 비밀번호 체크
             if (member == null || passwordEncoder.matches(password, encodedPassword) == false) {
                 System.out.println("패스워드 틀림..!");
-               // return null;
+                return null;
             }
 
             if (member != null && passwordEncoder.matches(password, encodedPassword) == true) {
@@ -53,7 +53,14 @@ public class MemberService {
                 System.out.println("입력 패스워드 일치");
 
             }
-       // }
+        }
+
+        if(ApiMember > 0){
+
+            System.out.println("API 로그인 사용자 확인..");
+
+        }
+
 
         // 3. 회원 응답 객체에서 비밀번호를 제거한 후 회원 정보 리턴
         member.clearPassword();
@@ -239,6 +246,16 @@ public class MemberService {
         System.out.println("[여긴service] :" +userInfo.get("loginId") +","+ userInfo.get("password"));
         memberMapper.saveAPI(userInfo);
         return null;
+    }
+
+
+    /**
+     * API 로그인 조회(가입여부)
+     * @param loginId - UK
+     * @return 회원 수
+     */
+    public int APIByLoginId(final String loginId) {
+        return memberMapper.ApiLoginId(loginId);
     }
 
 

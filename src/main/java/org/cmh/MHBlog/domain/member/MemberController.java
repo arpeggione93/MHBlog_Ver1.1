@@ -40,7 +40,6 @@ public class MemberController {
             System.out.println("로그인세션 저장 완료");
         }
 
-        System.out.println("로그인 컨트롤러>>>>"+member);
         return member;
     }
 
@@ -121,11 +120,7 @@ public class MemberController {
         int Regist_YN = memberService.countMemberByLoginId(loginId);
 
 
-
         System.out.println(">>>>>>>>>>>>" + Regist_YN);
-
-
-
 
         //신규회원
         if(Regist_YN == 0){
@@ -133,16 +128,17 @@ public class MemberController {
             memberService.saveMemberAPI(userInfo);
             System.out.println("API회원가입완료");
 
-
         }
 
         //로그인
         MemberResponse member = memberService.login(loginId, password);
+        int APIMember = memberService.APIByLoginId(loginId);
         // 2. 세션에 회원 정보 저장 & 세션 유지 시간 설정
-        if (member != null) {
+        if (APIMember > 0) {
             HttpSession session = request.getSession();
             session.setAttribute("loginMember", member);
             session.setMaxInactiveInterval(60 * 30);
+            System.out.println("세션저장");
         }
         System.out.println("로그인완료");
 
