@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/basic" xmlns:c="http://www.w3.org/1999/XSL/Transform">
     <th:block layout:fragment="title">
         <title>리스트 페이지</title>
     </th:block>
@@ -56,9 +57,13 @@
                 </div>
 
                 <!--/* 버튼 */-->
+
+                <!-- 로그인한 사용자만 글쓰기 버튼을 활성화 -->
+                <div th:if="${session.loginMember != null}" class="top_menu">
                 <p class="btn_set tr">
                     <a th:href="@{/post/write.do}" class="btns btn_st3 btn_mid">글쓰기</a>
                 </p>
+                </div>
             </section>
         </div> <!--/* .content */-->
     </th:block>
@@ -69,8 +74,10 @@
         /*<![CDATA[*/
 
 
+
             // 페이지가 로드되었을 때, 딱 한 번만 함수를 실행
         window.onload = () => {
+
                 setQueryStringParams();
 
                 findAllPost();
@@ -96,10 +103,9 @@
 
             // 게시글 리스트 조회
             function findAllPost() {
-
                 // 1. PagingResponse의 멤버인 List<T> 타입의 list를 의미
                 const list = [[ ${response.list} ]];
-
+                ///alert("testtesttest>>>>>>>>>>>>>>>>" + [[${session.loginMember.loginId}]] );
                 // 2. 리스트가 비어있는 경우, 행에 "검색 결과가 없다"는 메시지를 출력하고, 페이지 번호(페이지네이션) HTML을 제거(초기화)한 후 로직을 종료
                 if ( !list.length ) {
                     document.getElementById('list').innerHTML = '<td colspan="6"><div className="no_data_msg">검색된 결과가 없습니다.</div></td>';
@@ -149,7 +155,7 @@
 
                 // 3. id가 "list"인 요소를 찾아 HTML을 렌더링
                 document.getElementById('list').innerHTML = html;
-                alert(html);
+                //alert(html);
             }
 
 

@@ -46,11 +46,13 @@
                         </tr>
                     </tbody>
                 </table>
+
                 <p class="btn_set">
-                    <button type="button" onclick="goWritePage();" class="btns btn_bdr4 btn_mid">수정</button>
-                    <button type="button" onclick="deletePost();" class="btns btn_bdr1 btn_mid">삭제</button>
+                    <button type="button" id ="post_modified_btn" onclick="goWritePage();" class="btns btn_bdr4 btn_mid">수정</button>
+                    <button type="button" id ="post_del_btn" onclick="deletePost();" class="btns btn_bdr1 btn_mid">삭제</button>
                     <button type="button" onclick="goListPage();" class="btns btn_bdr3 btn_mid">뒤로</button>
                 </p>
+
 
                 <!--/* 댓글 작성 */-->
                 <div class="cm_write">
@@ -111,11 +113,17 @@
     <th:block layout:fragment="script">
         <script th:inline="javascript">
             /*<![CDATA[*/
-
+            var SessionID = [[${session.loginMember.loginId}]];
             window.onload = () => {
                 findAllFile();
 
                 findAllComment();
+
+                if(SessionID != String("test123")){
+
+                    btnDisabled();
+
+                }
             }
 
 
@@ -320,14 +328,15 @@
                                 <span class="date">${dayjs(row.registDttm).format('YYYY-MM-DD HH:mm')}</span>
                             </p>
                             <div class="cont"><div class="txt_con">${row.content}</div></div>
-                            <p class="func_btns">
-                                <button type="button" onclick="openCommentUpdatePopup(${row.id});" class="btns"><span class="icons icon_modify">수정</span></button>
-                                <button type="button" onclick="deleteComment(${row.id});" class="btns"><span class="icons icon_del">삭제</span></button>
+
+                            <p class="func_btns" id="cmt_btn_p">
+                                <button type="button" id="cmt_modified_btn" onclick="openCommentUpdatePopup(${row.id});" class="btns"><span class="icons icon_modify">수정</span></button>
+                                <button type="button" id="cmt_del_btn" onclick="deleteComment(${row.id});" class="btns"><span class="icons icon_del">삭제</span></button>
                             </p>
                         </div>
                     `;
                 })
-
+                //var SessionID = [[${session.loginMember.loginId}]];
                 document.querySelector('.cm_list').innerHTML = commentHtml;
             }
 
@@ -380,6 +389,24 @@
                 const postId = new URLSearchParams(location.search).get('id');
                 history.replaceState({}, '', location.pathname + `?id=${postId}&page=${currentPage.text}`);
             }
+
+            //버튼 비활성
+            //특정 사용자 제외하고 삭제 불가
+            function btnDisabled()  {
+                alert("수정 및 삭제 기능은 관리자만 가능합니다.");
+                const target = document.getElementById('cmt_modified_btn'); //댓글 수정
+                const target1 = document.getElementById('cmt_del_btn') //댓글삭제
+                const target2 = document.getElementById('post_modified_btn'); //게시물 수정
+                const target3 = document.getElementById('post_del_btn'); //게시물 삭제
+                const target4 = document.getElementById('cmt_btn_p');
+                target.disabled = true;
+                target1.disabled = true;
+                target2.disabled = true;
+                target3.disabled = true;
+                target4.disabled = true;
+            }
+
+
 
             /*]]>*/
         </script>

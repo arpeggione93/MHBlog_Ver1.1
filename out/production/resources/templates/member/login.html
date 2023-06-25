@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/button.css}" />
 	<link rel="stylesheet" th:href="@{/css/kakao.css}" />
 	<style>
-		#login_box .signup_btn {background:#42d870; border:0; border-bottom:solid 3px #4ed177; border-radius:50px; width:100%; height:52px; line-height:52px; font-size:16px; color:#fff; text-align:center; margin:20px 0 15px;}
+		#login_box .signup_btn {background:#42d370; border:0; border-bottom:solid 3px #4ed177; border-radius:50px; width:100%; height:52px; line-height:52px; font-size:16px; color:#fff; text-align:center; margin:20px 0 15px;}
 	</style>
 </head>
 
@@ -19,8 +19,9 @@
 		<div id="login_box">
 			<div class="login_con">
 				<div class="login_tit">
-					<h2>게시판 프로젝트</h2>
+					<h2>MH BLOG</h2>
 					<p>LOG<i>IN</i></p>
+					<h2>화 면</h2>
 				</div>
 
 				<div class="login_input">
@@ -37,8 +38,9 @@
 						</ul>
 						<button type="button" onclick="login();" class="login_btn">로그인</button>
 						<button type="button" onclick="openSignupPopup();" class="signup_btn">회원가입</button>
-						<a class="p-2" href="https://kauth.kakao.com/oauth/authorize?client_id=0604411e0cac0a315dfbadf5aeae568a&redirect_uri=http://localhost:8082/kakaoLogin&response_type=code">
-							<img src="/images/kakao_login_large_narrow.png" style="height:60px">
+						<label>소셜 아이디로 접속하기</label>
+						<a style=" width:50px; height:50px;" href="https://kauth.kakao.com/oauth/authorize?client_id=0604411e0cac0a315dfbadf5aeae568a&redirect_uri=http://localhost:8082/kakaoLogin&response_type=code">
+							<img src="/images/kakao_login_small.png" >
 						</a>
 					</form>
 				</div>
