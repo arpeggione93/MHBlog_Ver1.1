@@ -146,7 +146,7 @@ public class MemberController {
         }
         System.out.println("로그인완료");
 
-        return "redirect:/login.do";
+        return "redirect:/post/list.do";
 
 
 

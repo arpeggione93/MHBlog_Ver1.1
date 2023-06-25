@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +33,19 @@ public class MemberService {
         // 1. 회원 정보 및 비밀번호 조회
         MemberResponse member = findMemberByLoginId(loginId);
         String encodedPassword = (member == null) ? "" : member.getPassword();
-        int API_YN = member.getAPI_LOGIN_YN();
+        String API_YN = Objects.requireNonNull(member).getAPIYn();
+        MemberResponse test = memberMapper.findByLoginId(loginId);
+        System.out.println(">>>>>>" + test.getLoginId() + test.getAPIYn()  + test.getDeleteYn()+ "<<<<<");
         System.out.println("Password : " + encodedPassword);
+        System.out.println("API_YN>>>>>>" + API_YN + "loginID>>> " + loginId + "   member >>"
+        + member.getLoginId() + member.getDeleteYn() + member.getName() + member.getAPIYn()+"<<<<"  + findMemberByLoginId(loginId));
 
-
-        if(API_YN == 0) {
+        //memeber.getAPIYN 값이 null로 잡히는중
+        //if(API_YN == 0) {
             // 2. 회원 정보 및 비밀번호 체크
             if (member == null || passwordEncoder.matches(password, encodedPassword) == false) {
                 System.out.println("패스워드 틀림..!");
-                return null;
+               // return null;
             }
 
             if (member != null && passwordEncoder.matches(password, encodedPassword) == true) {
@@ -48,7 +53,7 @@ public class MemberService {
                 System.out.println("입력 패스워드 일치");
 
             }
-        }
+       // }
 
         // 3. 회원 응답 객체에서 비밀번호를 제거한 후 회원 정보 리턴
         member.clearPassword();
@@ -135,7 +140,7 @@ public class MemberService {
             stringBuilder.append("grant_type=authorization_code");
 
             stringBuilder.append("&client_id=0604411e0cac0a315dfbadf5aeae568a"); //본인이 발급받은 key
-            stringBuilder.append("&redirect_uri=http://localhost:8082/login"); // 본인이 설정한 주소
+            stringBuilder.append("&redirect_uri=http://localhost:8082/kakaoLogin"); // 본인이 설정한 주소
 
             stringBuilder.append("&code=" + authorize_code);
             bufferedWriter.write(stringBuilder.toString());
