@@ -69,7 +69,9 @@
         /*<![CDATA[*/
 
             // 페이지가 로드되었을 때, 딱 한 번만 함수를 실행
-            window.onload = () => {
+            import dayjs from "dayjs";
+
+        window.onload = () => {
                 setQueryStringParams();
 
                 findAllPost();
@@ -131,7 +133,8 @@
                 /*
                  * 2. 기존에 타임리프(Thymeleaf)를 이용해서 리스트 데이터를 그리던 것과 유사한 로직
                  *    기존에는 게시글 번호를 (전체 데이터 수 - loop의 인덱스 번호)로 처리했으나, 현재는 (전체 데이터 수 - ((현재 페이지 번호 - 1) * 페이지당 출력할 데이터 개수))로 정밀히 계산
-                 */
+                 *  06.25 | dayjs를 사용하기 위해서는 플러그인 설치 필요 -> (터미널) npm install dayjs
+                 * */
                 list.forEach(row => {
                     html += `
                         <tr>
@@ -147,6 +150,7 @@
 
                 // 3. id가 "list"인 요소를 찾아 HTML을 렌더링
                 document.getElementById('list').innerHTML = html;
+
             }
 
 

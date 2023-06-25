@@ -83,7 +83,7 @@
     <update id="update" parameterType="org.cmh.MHBlog.domain.post.PostRequest">
         UPDATE MH0_Blog_Post
         SET
-              modifiedDttm = NOW()
+              MODIFIED_DTTM = NOW()
             , title = #{title}
             , content = #{content}
             , writer = #{writer}
