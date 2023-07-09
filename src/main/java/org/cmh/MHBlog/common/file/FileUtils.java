@@ -28,8 +28,7 @@ public class FileUtils {
     private final String uploadPath = Paths.get("C:", "develop", "upload-files").toString();
 
     //서버 업로드 경로
-    //private final String uploadPath = Paths.get("usr:", "local", "tomcat", "webapps" ,"ROOT", "MHBlog", "post_img").toString();
-
+    //private final String uploadPath = Paths.get( "MHBlog", "files").toString();
     /**
      * 다중 파일 업로드
      * @param multipartFiles - 파일 객체 List

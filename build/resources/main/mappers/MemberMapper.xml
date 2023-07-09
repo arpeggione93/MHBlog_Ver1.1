@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.study.domain.member.MemberMapper">
+<mapper namespace="org.cmh.MHBlog.domain.member.MemberMapper">
 
-    <!-- tb_member 테이블 전체 컬럼 -->
+    <!-- MH0_Blog_Person 테이블 전체 컬럼 -->
     <sql id="memberColumns">
-          id
-        , login_id
-        , password
+          ID
+        , LOGIN_ID
+        , API_LOGIN_YN
+        , PASSWORD
         , name
-        , gender
-        , birthday
-        , delete_yn
-        , created_date
-        , modified_date
+        , GENDER
+        , BIRTHDAY
+        , DELETE_YN
+        , REGIST_DTTM
+        , MODIFIED_DTTM
     </sql>
 
 
     <!-- 회원 정보 저장 (회원가입) -->
-    <insert id="save" parameterType="com.study.domain.member.MemberRequest" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tb_member (
+    <insert id="save" parameterType="org.cmh.MHBlog.domain.member.MemberRequest" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MH0_Blog_Person (
             <include refid="memberColumns" />
         ) VALUES (
               #{id}
             , #{loginId}
+            , 0
             , #{password}
             , #{name}
             , #{gender}
@@ -36,40 +38,40 @@
 
 
     <!-- 회원 상세정보 조회 -->
-    <select id="findByLoginId" parameterType="string" resultType="com.study.domain.member.MemberResponse">
+    <select id="findByLoginId" parameterType="string" resultType="org.cmh.MHBlog.domain.member.MemberResponse">
         SELECT
             <include refid="memberColumns" />
         FROM
-            tb_member
+        MH0_Blog_Person
         WHERE
-            delete_yn = 0
-            AND login_id = #{value}
+            DELETE_YN = 0
+            AND LOGIN_ID = #{value}
     </select>
 
 
     <!-- 회원 정보 수정 -->
-    <update id="update" parameterType="com.study.domain.member.MemberRequest">
-        UPDATE tb_member
+    <update id="update" parameterType="org.cmh.MHBlog.domain.member.MemberRequest">
+        UPDATE MH0_Blog_Person
         SET
-              modified_date = NOW()
-            , name = #{name}
-            , gender = #{gender}
-            , birthday = #{birthday}
+              MODIFIED_DTTM = NOW()
+            , NAME = #{name}
+            , GENDER = #{gender}
+            , BIRTHDAY = #{birthday}
             <if test="password != null and password != ''">
-            , password = #{password}
+            , PASSWORD = #{password}
             </if>
         WHERE
-            id = #{id}
+            ID = #{id}
     </update>
 
 
     <!-- 회원 정보 삭제 (회원 탈퇴) -->
     <delete id="deleteById" parameterType="long">
-        UPDATE tb_member
+        UPDATE MH0_Blog_Person
         SET
-            delete_yn = 1
+            DELETE_YN = 1
         WHERE
-            id = #{id}
+            ID = #{id}
     </delete>
 
 
@@ -78,9 +80,49 @@
         SELECT
             COUNT(*)
         FROM
-            tb_member
+            MH0_Blog_Person
         WHERE
-            login_id = #{value}
+            LOGIN_ID = #{value}
     </select>
+
+
+    <!-- 회원 정보 저장 API (회원가입) -->
+    <insert id="saveAPI" parameterType="Hashmap" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MH0_Blog_Person (
+      LOGIN_ID
+    , API_LOGIN_YN
+    , PASSWORD
+    , name
+    , GENDER
+    , BIRTHDAY
+    , DELETE_YN
+    , REGIST_DTTM
+    , MODIFIED_DTTM  ) VALUES (
+          #{loginId}
+        , 1
+        , #{password}
+        , '카카오회원'
+        , NULL
+        , NULL
+        , 0
+        , NOW()
+        , NOW()
+        )
+    </insert>
+
+
+
+    <!-- API LOGIN 조회(가입여부) -->
+    <select id="ApiLoginId" parameterType="string" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            MH0_Blog_Person
+        WHERE
+            LOGIN_ID = #{value}
+            AND API_LOGIN_YN = 'Y'
+    </select>
+
+
 
 </mapper>

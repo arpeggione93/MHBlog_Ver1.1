@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.study.domain.comment.CommentMapper">
+<mapper namespace="org.cmh.MHBlog.domain.comment.CommentMapper">
 
-    <!-- tb_comment 테이블 전체 컬럼 -->
+    <!-- MH0_Blog_Comment 테이블 전체 컬럼 -->
     <sql id="commentColumns">
-          id
-        , post_id
-        , content
-        , writer
-        , delete_yn
-        , created_date
-        , modified_date
+          ID
+        , POST_ID
+        , CONTENT
+        , WRITER
+        , DELETE_YN
+        , REGIST_DTTM
+        , MODIFIED_DTTM
     </sql>
 
 
     <!-- 댓글 저장 -->
-    <insert id="save" parameterType="com.study.domain.comment.CommentRequest" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tb_comment (
+    <insert id="save" parameterType="org.cmh.MHBlog.domain.comment.CommentRequest" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO MH0_Blog_Comment (
             <include refid="commentColumns" />
         ) VALUES (
               #{id}
@@ -32,47 +32,47 @@
 
 
     <!-- 댓글 상세정보 조회 -->
-    <select id="findById" parameterType="long" resultType="com.study.domain.comment.CommentResponse">
+    <select id="findById" parameterType="long" resultType="org.cmh.MHBlog.domain.comment.CommentResponse">
         SELECT
             <include refid="commentColumns" />
         FROM
-            tb_comment
+        MH0_Blog_Comment
         WHERE
-            id = #{value}
+            ID = #{value}
     </select>
 
 
     <!-- 댓글 수정 -->
-    <update id="update" parameterType="com.study.domain.comment.CommentRequest">
-        UPDATE tb_comment
+    <update id="update" parameterType="org.cmh.MHBlog.domain.comment.CommentRequest">
+        UPDATE MH0_Blog_Comment
         SET
-              modified_date = NOW()
-            , content = #{content}
-            , writer = #{writer}
+              MODIFIED_DTTM = NOW()
+            , CONTENT = #{content}
+            , WRITER = #{writer}
         WHERE
-            id = #{id}
+            ID = #{id}
     </update>
 
 
     <!-- 댓글 삭제 -->
     <delete id="deleteById" parameterType="long">
-        UPDATE tb_comment
+        UPDATE MH0_Blog_Comment
         SET
-            delete_yn = 1
+            DELETE_YN = 1
         WHERE
-            id = #{id}
+            ID = #{id}
     </delete>
 
 
     <!-- 댓글 리스트 조회 -->
-    <select id="findAll" parameterType="com.study.domain.comment.CommentSearchDto" resultType="com.study.domain.comment.CommentResponse">
+    <select id="findAll" parameterType="org.cmh.MHBlog.domain.comment.CommentSearchDto" resultType="org.cmh.MHBlog.domain.comment.CommentResponse">
         SELECT
             <include refid="commentColumns" />
         FROM
-            tb_comment
+        MH0_Blog_Comment
         WHERE
-            delete_yn = 0
-            AND post_id = #{postId}
+            DELETE_YN = 0
+            AND POST_ID = #{postId}
         ORDER BY
             id DESC
         LIMIT #{pagination.limitStart}, #{recordSize}
@@ -80,14 +80,14 @@
 
 
     <!-- 댓글 수 카운팅 -->
-    <select id="count" parameterType="com.study.domain.comment.CommentSearchDto" resultType="int">
+    <select id="count" parameterType="org.cmh.MHBlog.domain.comment.CommentSearchDto" resultType="int">
         SELECT
             COUNT(*)
         FROM
-            tb_comment
+            MH0_Blog_Comment
         WHERE
-            delete_yn = 0
-            AND post_id = #{postId}
+            DELETE_YN = 0
+            AND POST_ID = #{postId}
     </select>
 
 </mapper>

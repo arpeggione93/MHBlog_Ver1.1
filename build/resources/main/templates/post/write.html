@@ -32,7 +32,7 @@
                                 <td><span class="chkbox"><input type="checkbox" id="isNotice" name="isNotice" class="chk" /><i></i><label for="isNotice"> 설정</label></span></td>
 
                                 <th scope="row">등록일</th>
-                                <td colspan="3"><input type="text" id="createdDate" name="createdDate" readonly /></td>
+                                <td colspan="3"><input type="text" id="registDttm" name="registDttm" readonly /></td>
                             </tr>
 
                             <tr>
@@ -80,6 +80,9 @@
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
+
+            var SessionID = [[${session.loginMember.loginId}]];
+
         /*<![CDATA[*/
 
             // 파일 삭제 처리용 익명 함수
@@ -103,6 +106,8 @@
                 renderPostInfo();
 
                 findAllFile();
+
+                btnDisabled();
             }
 
 
@@ -152,7 +157,7 @@
                 const form = document.getElementById('saveForm');
                 const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
                 form.isNotice.checked = post.noticeYn;
-                form.createdDate.value = dayjs(post.createdDate).format('YYYY-MM-DD HH:mm');
+                form.registDttm.value = dayjs(post.registDttm).format('YYYY-MM-DD HH:mm');
 
                 fields.forEach(field => {
                     form[field].value = post[field];
@@ -162,7 +167,7 @@
 
             // 등록일 초기화
             function initCreatedDate() {
-                document.getElementById('createdDate').value = dayjs().format('YYYY-MM-DD');
+                document.getElementById('registDttm').value = dayjs().format('YYYY-MM-DD');
             }
 
 
@@ -264,6 +269,18 @@
                 }
                 element.parentElement.remove();
             }
+
+
+
+            //버튼 비활성
+            //특정 사용자 제외하고 삭제 불가
+            function btnDisabled()  {
+                alert("공지 설정은 관리자만 가능합니다.");
+                const target = document.getElementById('isNotice'); //공지 chk_box
+                target.disabled = true;
+            }
+
+
 
         /*]]>*/
         </script>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/basic" xmlns:c="http://www.w3.org/1999/XSL/Transform">
     <th:block layout:fragment="title">
         <title>리스트 페이지</title>
     </th:block>
@@ -56,9 +57,13 @@
                 </div>
 
                 <!--/* 버튼 */-->
+
+                <!-- 로그인한 사용자만 글쓰기 버튼을 활성화 -->
+                <div th:if="${session.loginMember != null}" class="top_menu">
                 <p class="btn_set tr">
                     <a th:href="@{/post/write.do}" class="btns btn_st3 btn_mid">글쓰기</a>
                 </p>
+                </div>
             </section>
         </div> <!--/* .content */-->
     </th:block>
@@ -68,8 +73,11 @@
         <script th:inline="javascript">
         /*<![CDATA[*/
 
+
+
             // 페이지가 로드되었을 때, 딱 한 번만 함수를 실행
-            window.onload = () => {
+        window.onload = () => {
+
                 setQueryStringParams();
 
                 findAllPost();
@@ -95,10 +103,9 @@
 
             // 게시글 리스트 조회
             function findAllPost() {
-
                 // 1. PagingResponse의 멤버인 List<T> 타입의 list를 의미
                 const list = [[ ${response.list} ]];
-
+                ///alert("testtesttest>>>>>>>>>>>>>>>>" + [[${session.loginMember.loginId}]] );
                 // 2. 리스트가 비어있는 경우, 행에 "검색 결과가 없다"는 메시지를 출력하고, 페이지 번호(페이지네이션) HTML을 제거(초기화)한 후 로직을 종료
                 if ( !list.length ) {
                     document.getElementById('list').innerHTML = '<td colspan="6"><div className="no_data_msg">검색된 결과가 없습니다.</div></td>';
@@ -112,7 +119,7 @@
                 const params = [[ ${params} ]];
 
                 // 5. 리스트에 출력되는 게시글 번호를 처리하기 위해 사용되는 변수 (리스트에서 번호는 페이지 정보를 이용해서 계산해야 함)
-                let num = pagination.totalRecordCount - ((params.page - 1) * params.recordSize);
+                var num = pagination.totalRecordCount - ((params.page - 1) * params.recordSize);
 
                 // 6. 리스트 데이터 렌더링
                 drawList(list, num);
@@ -126,12 +133,13 @@
             function drawList(list, num) {
 
                 // 1. 렌더링 할 HTML을 저장할 변수
-                let html = '';
+                var html = '';
 
                 /*
                  * 2. 기존에 타임리프(Thymeleaf)를 이용해서 리스트 데이터를 그리던 것과 유사한 로직
                  *    기존에는 게시글 번호를 (전체 데이터 수 - loop의 인덱스 번호)로 처리했으나, 현재는 (전체 데이터 수 - ((현재 페이지 번호 - 1) * 페이지당 출력할 데이터 개수))로 정밀히 계산
-                 */
+                 *  06.25 | dayjs를 사용하기 위해서는 플러그인 설치 필요 -> (터미널) npm install dayjs
+                 * */
                 list.forEach(row => {
                     html += `
                         <tr>
@@ -139,7 +147,7 @@
                             <td>${row.noticeYn === false ? num-- : '공지'}</td>
                             <td class="tl"><a href="javascript:void(0);" onclick="goViewPage(${row.id});">${row.title}</a></td>
                             <td>${row.writer}</td>
-                            <td>${dayjs(row.createdDate).format('YYYY-MM-DD HH:mm')}</td>
+                            <td>${dayjs((row.registDttm)).format('YYYY-MM-DD HH:mm')}</td>
                             <td>${row.viewCnt}</td>
                         </tr>
                     `;
@@ -147,6 +155,7 @@
 
                 // 3. id가 "list"인 요소를 찾아 HTML을 렌더링
                 document.getElementById('list').innerHTML = html;
+                //alert(html);
             }
 
 
@@ -160,7 +169,7 @@
                 }
 
                 // 2. 렌더링 할 HTML을 저장할 변수
-                let html = '';
+                var html = '';
 
                 // 3. 이전 페이지가 있는 경우, 즉 시작 페이지(startPage)가 1이 아닌 경우 첫 페이지 버튼과 이전 페이지 버튼을 HTML에 추가
                 if (pagination.existPrevPage) {
@@ -175,7 +184,7 @@
                  *    페이지 번호(i)와 현재 페이지 번호(params.page)가 동일한 경우, 페이지 번호(i)를 활성화(on) 처리
                  */
                 html += '<p>';
-                for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+                for (var i = pagination.startPage; i <= pagination.endPage; i++) {
                     html += (i !== params.page)
                         ? `<a href="javascript:void(0);" onclick="movePage(${i});">${i}</a>`
                         : `<span class="on">${i}</span>`

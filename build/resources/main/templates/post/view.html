@@ -20,9 +20,8 @@
                         <tr>
                             <th scope="row">글 유형</th>
                             <td th:text="${post.noticeYn == false ? '일반' : '공지'}"></td>
-
                             <th scope="row">등록일</th>
-                            <td th:text="${#temporals.format( post.createdDate, 'yyyy-MM-dd HH:mm' )}"></td>
+                            <td th:text="${#dates.format(post.registDttm, 'YYYY-MM-DD HH:MM')}"></td>
                         </tr>
                         <tr>
                             <th scope="row">제목</th>
@@ -47,11 +46,13 @@
                         </tr>
                     </tbody>
                 </table>
+
                 <p class="btn_set">
-                    <button type="button" onclick="goWritePage();" class="btns btn_bdr4 btn_mid">수정</button>
-                    <button type="button" onclick="deletePost();" class="btns btn_bdr1 btn_mid">삭제</button>
+                    <button type="button" id ="post_modified_btn" onclick="goWritePage();" class="btns btn_bdr4 btn_mid">수정</button>
+                    <button type="button" id ="post_del_btn" onclick="deletePost();" class="btns btn_bdr1 btn_mid">삭제</button>
                     <button type="button" onclick="goListPage();" class="btns btn_bdr3 btn_mid">뒤로</button>
                 </p>
+
 
                 <!--/* 댓글 작성 */-->
                 <div class="cm_write">
@@ -76,6 +77,11 @@
             </section>
         </div> <!--/* .content */-->
 
+
+
+        <!-- 여기까지 -->
+
+
         <!--/* 댓글 수정 popup */-->
         <div id="commentUpdatePopup" class="popLayer">
             <h3>댓글 수정</h3>
@@ -85,14 +91,14 @@
                         <col style="width:30%;" /><col style="width:70%;" />
                     </colgroup>
                     <tbody>
-                        <tr>
-                            <th scope="row">작성자<span class="es">필수 입력</span></th>
-                            <td><input type="text" id="modalWriter" name="modalWriter" placeholder="작성자를 입력해 주세요." /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">내용<span class="es">필수 입력</span></th>
-                            <td><textarea id="modalContent" name="modalContent" cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea></td>
-                        </tr>
+                    <tr>
+                        <th scope="row">작성자<span class="es">필수 입력</span></th>
+                        <td><input type="text" id="modalWriter" name="modalWriter" placeholder="작성자를 입력해 주세요." /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">내용<span class="es">필수 입력</span></th>
+                        <td><textarea id="modalContent" name="modalContent" cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea></td>
+                    </tr>
                     </tbody>
                 </table>
                 <p class="btn_set">
@@ -106,12 +112,18 @@
 
     <th:block layout:fragment="script">
         <script th:inline="javascript">
-        /*<![CDATA[*/
-
+            /*<![CDATA[*/
+            var SessionID = [[${session.loginMember.loginId}]];
             window.onload = () => {
                 findAllFile();
 
                 findAllComment();
+
+                if(SessionID != String("test123")){
+
+                    btnDisabled();
+
+                }
             }
 
 
@@ -139,7 +151,7 @@
             }
 
 
-           // 전체 댓글 조회
+            // 전체 댓글 조회
             function findAllComment(page) {
 
                 const uriPage = new URLSearchParams(location.search).get('page');
@@ -221,11 +233,12 @@
                 isValid(content, '댓글');
 
                 const postId = [[ ${post.id} ]];
+                const postNM = [[ ${post.writer} ]];
                 const uri = `/posts/${postId}/comments`;
                 const params = {
                     postId : postId,
                     content : content.value,
-                    writer : '홍길동'
+                    writer : postNM //'홍길동'
                 }
 
                 callApi(uri, 'post', params);
@@ -312,17 +325,18 @@
                             <span class="writer_img"><img src="/images/default_profile.png" width="30" height="30" alt="기본 프로필 이미지"/></span>
                             <p class="writer">
                                 <em>${row.writer}</em>
-                                <span class="date">${dayjs(row.createdDate).format('YYYY-MM-DD HH:mm')}</span>
+                                <span class="date">${dayjs(row.registDttm).format('YYYY-MM-DD HH:mm')}</span>
                             </p>
                             <div class="cont"><div class="txt_con">${row.content}</div></div>
-                            <p class="func_btns">
-                                <button type="button" onclick="openCommentUpdatePopup(${row.id});" class="btns"><span class="icons icon_modify">수정</span></button>
-                                <button type="button" onclick="deleteComment(${row.id});" class="btns"><span class="icons icon_del">삭제</span></button>
+
+                            <p class="func_btns" id="cmt_btn_p">
+                                <button type="button" id="cmt_modified_btn" onclick="openCommentUpdatePopup(${row.id});" class="btns"><span class="icons icon_modify">수정</span></button>
+                                <button type="button" id="cmt_del_btn" onclick="deleteComment(${row.id});" class="btns"><span class="icons icon_del">삭제</span></button>
                             </p>
                         </div>
                     `;
                 })
-
+                //var SessionID = [[${session.loginMember.loginId}]];
                 document.querySelector('.cm_list').innerHTML = commentHtml;
             }
 
@@ -376,7 +390,26 @@
                 history.replaceState({}, '', location.pathname + `?id=${postId}&page=${currentPage.text}`);
             }
 
-        /*]]>*/
+            //버튼 비활성
+            //특정 사용자 제외하고 삭제 불가
+            function btnDisabled()  {
+                alert("수정 및 삭제 기능은 관리자만 가능합니다.");
+                const target = document.getElementById('cmt_modified_btn'); //댓글 수정
+                const target1 = document.getElementById('cmt_del_btn') //댓글삭제
+                const target2 = document.getElementById('post_modified_btn'); //게시물 수정
+                const target3 = document.getElementById('post_del_btn'); //게시물 삭제
+                const target4 = document.getElementById('cmt_btn_p');
+                target.disabled = true;
+                target1.disabled = true;
+                target2.disabled = true;
+                target3.disabled = true;
+                target4.disabled = true;
+            }
+
+
+
+            /*]]>*/
         </script>
+
     </th:block>
 </html>
